@@ -8,30 +8,36 @@ namespace Project.DAL.Repository
 {
     public class GenericRepository<T> where T : class //statt Brands schreibe wir jetzt T für "Generic", T muss als Class definiert werden
     {
-        ApplicationDbContext context = new ApplicationDbContext();
+        private readonly ApplicationDbContext _context;
+        
+        public GenericRepository(ApplicationDbContext context) //Konstruktor für "ApplicationDbContext context = new ApplicationDbContext();"
+        {
+            _context = context;
+        }
+
         public T GetEntity(int Id) //IActionResult gehört zu Controller, deswegen Brand return
         {
-            var entity = context.Set<T>().Find(Id);
+            var entity = _context.Set<T>().Find(Id);
             return entity;
         }
 
         public List<T> GetAllEntities() //Hier wird eine Liste von Brand zurüchgegeben
         {
-            var entities = context.Set<T>().ToList();
+            var entities = _context.Set<T>().ToList();
             return entities;
         }
 
         public void RemoveEntity(int Id)
         {
-            var entity = context.Set<T>().Find(Id);
-            context.Set<T>().Remove(entity);
-            context.SaveChanges();
+            var entity = _context.Set<T>().Find(Id);
+            _context.Set<T>().Remove(entity);
+            _context.SaveChanges();
         }
 
         public void CreateEntity(T request)
         {
-            context.Set<T>().Add(request);
-            context.SaveChanges();
+            _context.Set<T>().Add(request);
+            _context.SaveChanges();
         }
     }
 }

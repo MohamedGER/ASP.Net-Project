@@ -12,26 +12,30 @@ namespace Project.PL.Controllers
     [ApiController]
     public class BrandsController : ControllerBase
     {
-        GenericRepository<Brand> repo = new GenericRepository<Brand>();
+        private readonly GenericRepository<Brand> _repo;
+        public BrandsController(GenericRepository<Brand> repo) //Konstruktor für "GenericRepository<Brand> repo = new GenericRepository<Brand>();"
+        {   
+            _repo = repo;
+        }
 
         [HttpGet("{Id}")]
         public IActionResult GetById(int Id)
         {
-            var Brand = repo.GetBrand(Id);
+            var Brand = _repo.GetEntity(Id);
             return Ok(Brand);
         }
 
         [HttpGet("")]
         public IActionResult GetAll()
         {
-            var Brands = repo.GetAllBrands();
+            var Brands = _repo.GetAllEntities();
             return Ok(Brands);
         }
 
         [HttpDelete("{Id}")]
         public IActionResult DeleteById(int Id)
         {
-            repo.RemoveBrand(Id); 
+            _repo.RemoveEntity(Id); 
 
             return Ok("Success");
         }
@@ -39,7 +43,7 @@ namespace Project.PL.Controllers
         [HttpPost("")]
         public IActionResult AddBrand(Brand B)
         {
-            repo.CreateBrand(B);
+            _repo.CreateEntity(B);
 
             return Ok("Success");
         }
